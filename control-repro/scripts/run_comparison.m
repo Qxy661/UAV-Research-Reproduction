@@ -156,23 +156,154 @@ fprintf('实验1完成，结果已保存\n');
 %% ========== 实验2: 风扰抑制 ==========
 fprintf('\n========== 实验2: 风扰抑制 ==========\n');
 
-% 在 t=2s 施加 5m/s 阶跃风扰
-% 复用实验1的代码，但在动力学中加入风扰
+% 重新初始化状态
+x_pid = zeros(12,1); x_adrc = zeros(12,1); x_mpc = zeros(12,1);
+state_pid = init_pid_state(); state_adrc = init_adrc_state(); state_mpc = init_mpc_state();
 
-% ... (类似结构，风扰通过修改 quadrotor_eom 的 k_drag 项实现)
+phi_pid2 = zeros(N_steps,1); phi_adrc2 = zeros(N_steps,1); phi_mpc2 = zeros(N_steps,1);
+
+% 风扰参数：在 t=2s 施加阶跃风扰
+wind_time = 2.0;  % 风扰开始时间
+wind_force = 0.005; % 风扰力 [N]（相当于约 5m/s 风速）
+
+for k = 1:N_steps
+    current_t = t(k);
+
+    % PID 控制
+    if mod(k-1, ctrl_step) == 0
+        y_pid = [x_pid(7:9); x_pid(10:12); x_pid(3); x_pid(6)];
+        [u_pid_now, state_pid] = pid_attitude(ref, y_pid, state_pid, params_pid, Ts_ctrl);
+    else
+        u_pid_now = u_pid(max(1,k-1),:);
+    end
+
+    % ADRC 控制
+    if mod(k-1, ctrl_step) == 0
+        y_adrc = [x_adrc(7:9); x_adrc(10:12); x_adrc(3); x_adrc(6)];
+        [u_adrc_now, state_adrc] = adrc_attitude(ref, y_adrc, state_adrc, params_adrc, Ts_ctrl);
+    else
+        u_adrc_now = u_adrc(max(1,k-1),:);
+    end
+
+    % MPC 控制
+    if mod(k-1, ctrl_step) == 0
+        y_mpc = [x_mpc(7:9); x_mpc(10:12); x_mpc(3); x_mpc(6)];
+        [u_mpc_now, state_mpc] = mpc_attitude(ref, y_mpc, state_mpc, params_mpc, Ts_ctrl);
+    else
+        u_mpc_now = u_mpc(max(1,k-1),:);
+    end
+
+    % 添加风扰（在 x 方向施加力，产生滚转力矩）
+    wind_torque = 0;
+    if current_t >= wind_time
+        wind_torque = wind_force * params.l;  % 风产生的力矩
+    end
+
+    u_pid_wind = u_pid_now + [0, wind_torque, 0, 0];
+    u_adrc_wind = u_adrc_now + [0, wind_torque, 0, 0];
+    u_mpc_wind = u_mpc_now + [0, wind_torque, 0, 0];
+
+    % 状态更新
+    [~, x_pid_out] = ode45(@(t,x) quadrotor_eom(t, x, u_pid_wind', params), [0, params.Ts], x_pid);
+    x_pid = x_pid_out(end,:)';
+    [~, x_adrc_out] = ode45(@(t,x) quadrotor_eom(t, x, u_adrc_wind', params), [0, params.Ts], x_adrc);
+    x_adrc = x_adrc_out(end,:)';
+    [~, x_mpc_out] = ode45(@(t,x) quadrotor_eom(t, x, u_mpc_wind', params), [0, params.Ts], x_mpc);
+    x_mpc = x_mpc_out(end,:)';
+
+    phi_pid2(k) = x_pid(7); phi_adrc2(k) = x_adrc(7); phi_mpc2(k) = x_mpc(7);
+end
+
+% 计算风扰指标
+max_dev_pid = max(abs(phi_pid2(round(wind_time/Ts_ctrl):end))) * 180/pi;
+max_dev_adrc = max(abs(phi_adrc2(round(wind_time/Ts_ctrl):end))) * 180/pi;
+max_dev_mpc = max(abs(phi_mpc2(round(wind_time/Ts_ctrl):end))) * 180/pi;
+
+fprintf('风扰抑制指标（最大偏差 [deg]）:\n');
+fprintf('  PID:  %.2f\n  ADRC: %.2f\n  MPC:  %.2f\n', max_dev_pid, max_dev_adrc, max_dev_mpc);
+
+% 绘图
+figure('Position', [100, 100, 800, 400]);
+plot(t, rad2deg(phi_pid2), 'b-', t, rad2deg(phi_adrc2), 'r--', t, rad2deg(phi_mpc2), 'g-.');
+hold on; xline(wind_time, 'k:', '风扰开始', 'LineWidth', 1.5);
+xlabel('时间 [s]'); ylabel('滚转角 [deg]');
+legend('PID', 'ADRC', 'MPC', 'Location', 'best');
+title('实验2: 风扰抑制对比（5m/s 阶跃风）'); grid on;
+saveas(gcf, fullfile(results_dir, 'exp2_disturbance.png'));
+fprintf('实验2完成\n');
 
 %% ========== 实验3: 参数敏感度 ==========
 fprintf('\n========== 实验3: 参数敏感度 ==========\n');
 
 % 惯性参数偏移 ±20%
-% 对每个控制器分别测试，计算性能退化率
+perturbations = [0.8, 1.0, 1.2];  % -20%, nominal, +20%
+results_sensitivity = zeros(3, 3);  % [perturbation × algorithm]
 
-% ... (类似结构，修改 params.Jx, params.Jy, params.Jz)
+for p_idx = 1:length(perturbations)
+    pert = perturbations(p_idx);
+    params_pert = params;
+    params_pert.Jx = params.Jx * pert;
+    params_pert.Jy = params.Jy * pert;
+    params_pert.Jz = params.Jz * pert;
+
+    % 重新初始化
+    x_pid = zeros(12,1); x_adrc = zeros(12,1); x_mpc = zeros(12,1);
+    state_pid = init_pid_state(); state_adrc = init_adrc_state(); state_mpc = init_mpc_state();
+
+    phi_pert_pid = zeros(N_steps,1); phi_pert_adrc = zeros(N_steps,1); phi_pert_mpc = zeros(N_steps,1);
+
+    for k = 1:N_steps
+        if mod(k-1, ctrl_step) == 0
+            y_pid = [x_pid(7:9); x_pid(10:12); x_pid(3); x_pid(6)];
+            [u_pid_now, state_pid] = pid_attitude(ref, y_pid, state_pid, params_pid, Ts_ctrl);
+            y_adrc = [x_adrc(7:9); x_adrc(10:12); x_adrc(3); x_adrc(6)];
+            [u_adrc_now, state_adrc] = adrc_attitude(ref, y_adrc, state_adrc, params_adrc, Ts_ctrl);
+            y_mpc = [x_mpc(7:9); x_mpc(10:12); x_mpc(3); x_mpc(6)];
+            [u_mpc_now, state_mpc] = mpc_attitude(ref, y_mpc, state_mpc, params_mpc, Ts_ctrl);
+        else
+            u_pid_now = u_pid(max(1,k-1),:);
+            u_adrc_now = u_adrc(max(1,k-1),:);
+            u_mpc_now = u_mpc(max(1,k-1),:);
+        end
+
+        [~, x_pid_out] = ode45(@(t,x) quadrotor_eom(t, x, u_pid_now', params_pert), [0, params.Ts], x_pid);
+        x_pid = x_pid_out(end,:)';
+        [~, x_adrc_out] = ode45(@(t,x) quadrotor_eom(t, x, u_adrc_now', params_pert), [0, params.Ts], x_adrc);
+        x_adrc = x_adrc_out(end,:)';
+        [~, x_mpc_out] = ode45(@(t,x) quadrotor_eom(t, x, u_mpc_now', params_pert), [0, params.Ts], x_mpc);
+        x_mpc = x_mpc_out(end,:)';
+
+        phi_pert_pid(k) = x_pid(7); phi_pert_adrc(k) = x_adrc(7); phi_pert_mpc(k) = x_mpc(7);
+    end
+
+    % 计算 RMSE
+    rmse_pid = sqrt(mean((phi_pert_pid - phi_ref).^2)) * 180/pi;
+    rmse_adrc = sqrt(mean((phi_pert_adrc - phi_ref).^2)) * 180/pi;
+    rmse_mpc = sqrt(mean((phi_pert_mpc - phi_ref).^2)) * 180/pi;
+
+    results_sensitivity(p_idx, :) = [rmse_pid, rmse_adrc, rmse_mpc];
+end
+
+fprintf('参数敏感度（RMSE [deg]）:\n');
+fprintf('  %-10s %-10s %-10s %-10s\n', '偏移', 'PID', 'ADRC', 'MPC');
+for p_idx = 1:length(perturbations)
+    fprintf('  %-10s %-10.2f %-10.2f %-10.2f\n', ...
+        sprintf('J×%.1f', perturbations(p_idx)), results_sensitivity(p_idx,1), results_sensitivity(p_idx,2), results_sensitivity(p_idx,3));
+end
+
+% 绘图
+figure('Position', [100, 100, 600, 400]);
+bar(results_sensitivity);
+set(gca, 'XTickLabel', {'J×0.8', 'J×1.0', 'J×1.2'});
+xlabel('惯性参数偏移'); ylabel('RMSE [deg]');
+legend('PID', 'ADRC', 'MPC', 'Location', 'best');
+title('实验3: 参数敏感度对比'); grid on;
+saveas(gcf, fullfile(results_dir, 'exp3_sensitivity.png'));
+fprintf('实验3完成\n');
 
 %% ========== 结果统计 ==========
 fprintf('\n========== 结果统计 ==========\n');
 
-% 计算性能指标
 metrics_exp1 = compute_metrics(t, phi_pid, phi_adrc, phi_mpc, phi_ref);
 fprintf('实验1 - 阶跃响应指标:\n');
 disp(metrics_exp1);

@@ -9,14 +9,14 @@ from envs.hover_env import HoverEnv, HoverEnvWind
 from algorithms.ppo import PPO
 
 
-def train_ppo(n_episodes=500, wind_enabled=False, wind_speed=3.0, seed=42, save_dir="results/ppo_training"):
+def train_ppo(n_episodes=2000, wind_enabled=False, wind_speed=3.0, seed=42, save_dir="results/ppo_training"):
     os.makedirs(save_dir, exist_ok=True)
     env = HoverEnvWind(wind_speed=wind_speed) if wind_enabled else HoverEnv(seed=seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
 
-    agent = PPO(obs_dim=env.obs_dim, act_dim=env.act_dim, hidden_dim=64, lr=3e-4, gamma=0.99, lam=0.95,
-                clip_epsilon=0.2, n_epochs=10, batch_size=64)
+    agent = PPO(obs_dim=env.obs_dim, act_dim=env.act_dim, hidden_dim=128, lr=3e-4, gamma=0.99, lam=0.95,
+                clip_epsilon=0.2, n_epochs=10, batch_size=128)
 
     episode_rewards, pos_errors, training_log = [], [], []
     start_time = time.time()

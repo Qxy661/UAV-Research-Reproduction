@@ -41,18 +41,18 @@ function dx = quadrotor_eom(t, x, u, params)
 
     % 平移动力学
     % m * [u_dot, v_dot, w_dot] = R * [0; 0; f] + [0; 0; -m*g] - k_drag * [u; v; w]
-    accel = (R * [0; 0; f] + [0; 0; -m*g] - k_drag * vel) / m;
+    accel = (R * [0; 0; f] + [0; 0; -m*g] - k_drag * vel(:)) / m;
 
     % 欧拉角速率
     % [phi_dot, theta_dot, psi_dot] = W * [p, q, r]
     W = [1, sin(phi)*tan(theta), cos(phi)*tan(theta);
          0, cos(phi), -sin(phi);
          0, sin(phi)/cos(theta), cos(phi)/cos(theta)];
-    euler_dot = W * omega;
+    euler_dot = W * omega(:);
 
     % 旋转动力学
     % J * omega_dot = tau - omega x (J * omega)
-    omega_dot = J \ (tau - cross(omega, J * omega));
+    omega_dot = J \ (tau(:) - cross(omega(:), J * omega(:)));
 
     % 状态导数
     dx = zeros(12, 1);

@@ -9,14 +9,14 @@ from envs.hover_env import HoverEnv, HoverEnvWind
 from algorithms.sac import SAC
 
 
-def train_sac(n_episodes=500, wind_enabled=False, wind_speed=3.0, seed=42, save_dir="results/sac_training"):
+def train_sac(n_episodes=2000, wind_enabled=False, wind_speed=3.0, seed=42, save_dir="results/sac_training"):
     os.makedirs(save_dir, exist_ok=True)
     env = HoverEnvWind(wind_speed=wind_speed) if wind_enabled else HoverEnv(seed=seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
 
-    agent = SAC(obs_dim=env.obs_dim, act_dim=env.act_dim, hidden_dim=128, lr=3e-4, gamma=0.99,
-                tau=0.005, buffer_size=50000, batch_size=128)
+    agent = SAC(obs_dim=env.obs_dim, act_dim=env.act_dim, hidden_dim=256, lr=3e-4, gamma=0.99,
+                tau=0.005, buffer_size=100000, batch_size=256)
 
     episode_rewards, pos_errors, training_log = [], [], []
     total_steps = 0
