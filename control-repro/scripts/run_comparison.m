@@ -6,7 +6,10 @@
 % 用法: 直接运行此脚本
 
 clear; clc; close all;
-addpath(fileparts(mfilename('fullpath')));
+script_dir = fileparts(mfilename('fullpath'));
+addpath(script_dir);
+results_dir = fullfile(script_dir, '..', 'results');
+if ~exist(results_dir, 'dir'), mkdir(results_dir); end
 
 %% 加载参数
 params = struct();
@@ -147,7 +150,7 @@ legend('PID', 'ADRC', 'MPC', 'Location', 'best');
 title('控制输入（总推力）'); grid on;
 
 sgtitle('实验1: 阶跃响应对比', 'FontSize', 14);
-saveas(gcf, 'results/exp1_step_response.png');
+saveas(gcf, fullfile(results_dir, 'exp1_step_response.png'));
 fprintf('实验1完成，结果已保存\n');
 
 %% ========== 实验2: 风扰抑制 ==========

@@ -1,0 +1,29 @@
+{
+  "task_decomposition": {
+    "total": 20,
+    "correct": 4,
+    "accuracy": 0.2,
+    "by_difficulty": {
+      "easy": {
+        "total": 4,
+        "correct": 3,
+        "accuracy": 0.75
+      },
+      "medium": {
+        "total": 8,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "hard": {
+        "total": 8,
+        "correct": 1,
+        "accuracy": 0.125
+      }
+    }
+  },
+  "anomaly_handling": {
+    "total": 10,
+    "correct": 10,
+    "detection_rate": 1.0
+  }
+}

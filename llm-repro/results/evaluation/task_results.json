@@ -1,0 +1,319 @@
+[
+  {
+    "task_id": 1,
+    "difficulty": "easy",
+    "expected": [
+      "goto",
+      "land",
+      "hover",
+      "takeoff"
+    ],
+    "parsed": [
+      "goto",
+      "land",
+      "hover",
+      "takeoff"
+    ],
+    "match_rate": 1.0,
+    "correct": true,
+    "latency": 0.0
+  },
+  {
+    "task_id": 2,
+    "difficulty": "easy",
+    "expected": [
+      "goto",
+      "land",
+      "takeoff"
+    ],
+    "parsed": [
+      "land",
+      "goto"
+    ],
+    "match_rate": 0.6666666666666666,
+    "correct": true,
+    "latency": 0.0
+  },
+  {
+    "task_id": 3,
+    "difficulty": "medium",
+    "expected": [
+      "goto",
+      "land",
+      "loiter",
+      "takeoff"
+    ],
+    "parsed": [
+      "land",
+      "goto"
+    ],
+    "match_rate": 0.5,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 4,
+    "difficulty": "medium",
+    "expected": [
+      "land",
+      "grid_search",
+      "takeoff"
+    ],
+    "parsed": [
+      "grid_search"
+    ],
+    "match_rate": 0.3333333333333333,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 5,
+    "difficulty": "easy",
+    "expected": [
+      "goto",
+      "land",
+      "takeoff"
+    ],
+    "parsed": [
+      "land",
+      "takeoff"
+    ],
+    "match_rate": 0.6666666666666666,
+    "correct": true,
+    "latency": 0.0
+  },
+  {
+    "task_id": 6,
+    "difficulty": "medium",
+    "expected": [
+      "land",
+      "patrol",
+      "takeoff"
+    ],
+    "parsed": [
+      "patrol",
+      "hover",
+      "goto"
+    ],
+    "match_rate": 0.3333333333333333,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 7,
+    "difficulty": "hard",
+    "expected": [
+      "goto",
+      "land",
+      "track_target",
+      "takeoff"
+    ],
+    "parsed": [
+      "goto"
+    ],
+    "match_rate": 0.25,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 8,
+    "difficulty": "medium",
+    "expected": [
+      "land",
+      "takeoff",
+      "rectangle_path"
+    ],
+    "parsed": [
+      "takeoff"
+    ],
+    "match_rate": 0.3333333333333333,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 9,
+    "difficulty": "medium",
+    "expected": [
+      "goto",
+      "land",
+      "capture_image",
+      "takeoff"
+    ],
+    "parsed": [
+      "capture_image",
+      "goto"
+    ],
+    "match_rate": 0.5,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 10,
+    "difficulty": "hard",
+    "expected": [
+      "spiral_climb",
+      "land",
+      "takeoff"
+    ],
+    "parsed": [
+      "land",
+      "takeoff"
+    ],
+    "match_rate": 0.6666666666666666,
+    "correct": true,
+    "latency": 0.0
+  },
+  {
+    "task_id": 11,
+    "difficulty": "hard",
+    "expected": [
+      "formation_takeoff",
+      "formation_goto",
+      "formation_land"
+    ],
+    "parsed": [
+      "formation_takeoff",
+      "takeoff"
+    ],
+    "match_rate": 0.3333333333333333,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 12,
+    "difficulty": "hard",
+    "expected": [
+      "land",
+      "goto_with_avoidance",
+      "takeoff"
+    ],
+    "parsed": [
+      "loiter"
+    ],
+    "match_rate": 0.0,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 13,
+    "difficulty": "hard",
+    "expected": [
+      "precision_land",
+      "land"
+    ],
+    "parsed": [
+      "land"
+    ],
+    "match_rate": 0.5,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 14,
+    "difficulty": "medium",
+    "expected": [
+      "land",
+      "plan_route",
+      "execute_route"
+    ],
+    "parsed": [
+      "land"
+    ],
+    "match_rate": 0.3333333333333333,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 15,
+    "difficulty": "hard",
+    "expected": [
+      "follow_target",
+      "land",
+      "takeoff"
+    ],
+    "parsed": [
+      "follow_target"
+    ],
+    "match_rate": 0.3333333333333333,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 16,
+    "difficulty": "medium",
+    "expected": [
+      "land",
+      "area_coverage",
+      "takeoff"
+    ],
+    "parsed": [
+      "grid_search",
+      "area_coverage"
+    ],
+    "match_rate": 0.3333333333333333,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 17,
+    "difficulty": "easy",
+    "expected": [
+      "check_battery",
+      "return_to_launch_if_low_battery",
+      "execute_mission",
+      "land"
+    ],
+    "parsed": [
+      "land"
+    ],
+    "match_rate": 0.25,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 18,
+    "difficulty": "medium",
+    "expected": [
+      "data_collection",
+      "land",
+      "takeoff",
+      "return_to_launch"
+    ],
+    "parsed": [
+      "hover",
+      "land"
+    ],
+    "match_rate": 0.25,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 19,
+    "difficulty": "hard",
+    "expected": [
+      "land",
+      "enable_led",
+      "disable_led",
+      "takeoff",
+      "night_mission"
+    ],
+    "parsed": [],
+    "match_rate": 0.0,
+    "correct": false,
+    "latency": 0.0
+  },
+  {
+    "task_id": 20,
+    "difficulty": "hard",
+    "expected": [
+      "assign_areas",
+      "consolidate_results",
+      "land_all",
+      "parallel_search"
+    ],
+    "parsed": [],
+    "match_rate": 0.0,
+    "correct": false,
+    "latency": 0.0
+  }
+]

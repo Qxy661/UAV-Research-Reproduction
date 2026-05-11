@@ -1,0 +1,62 @@
+[
+  {
+    "anomaly_id": 1,
+    "scenario": "飞行过程中GPS信号丢失",
+    "severity": "high",
+    "handled": true
+  },
+  {
+    "anomaly_id": 2,
+    "scenario": "电池电量突然从60%降到15%",
+    "severity": "critical",
+    "handled": true
+  },
+  {
+    "anomaly_id": 3,
+    "scenario": "检测到前方有未知障碍物",
+    "severity": "high",
+    "handled": true
+  },
+  {
+    "anomaly_id": 4,
+    "scenario": "通信链路质量下降，丢包率达到30%",
+    "severity": "medium",
+    "handled": true
+  },
+  {
+    "anomaly_id": 5,
+    "scenario": "风速突然增大到8级（17-20m/s）",
+    "severity": "high",
+    "handled": true
+  },
+  {
+    "anomaly_id": 6,
+    "scenario": "IMU传感器数据异常，角速率读数跳变",
+    "severity": "critical",
+    "handled": true
+  },
+  {
+    "anomaly_id": 7,
+    "scenario": "电机温度过高报警",
+    "severity": "medium",
+    "handled": true
+  },
+  {
+    "anomaly_id": 8,
+    "scenario": "检测到禁飞区边界",
+    "severity": "high",
+    "handled": true
+  },
+  {
+    "anomaly_id": 9,
+    "scenario": "任务执行时间超出预期50%",
+    "severity": "medium",
+    "handled": true
+  },
+  {
+    "anomaly_id": 10,
+    "scenario": "相机云台卡死，无法调整拍摄角度",
+    "severity": "low",
+    "handled": true
+  }
+]
