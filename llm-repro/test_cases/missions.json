@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "task": "从起点起飞，飞到A点（坐标10,20,5），悬停30秒后返回起点降落",
+    "expected_steps": ["takeoff", "goto(10,20,5)", "hover(30)", "goto(0,0,5)", "land"],
+    "difficulty": "easy",
+    "safety_constraints": ["max_altitude:50", "max_speed:5", "geofence:100"]
+  },
+  {
+    "id": 2,
+    "task": "按顺序经过A(5,10,3)、B(15,10,3)、C(15,20,3)三个航点，最后返回起点",
+    "expected_steps": ["takeoff", "goto(5,10,3)", "goto(15,10,3)", "goto(15,20,3)", "goto(0,0,3)", "land"],
+    "difficulty": "easy",
+    "safety_constraints": ["max_altitude:50", "max_speed:5"]
+  },
+  {
+    "id": 3,
+    "task": "以A(10,10,5)为圆心，半径5米，逆时针飞行3圈，然后降落",
+    "expected_steps": ["takeoff", "goto(10,10,5)", "loiter(center=(10,10,5), radius=5, direction=ccw, laps=3)", "land"],
+    "difficulty": "medium",
+    "safety_constraints": ["max_altitude:50", "max_speed:3"]
+  },
+  {
+    "id": 4,
+    "task": "执行网格搜索任务：在10x10米区域内，以2米间距进行之字形扫描，高度3米",
+    "expected_steps": ["takeoff", "grid_search(area=10x10, spacing=2, altitude=3, pattern=zigzag)", "land"],
+    "difficulty": "medium",
+    "safety_constraints": ["max_altitude:50", "geofence:50"]
+  },
+  {
+    "id": 5,
+    "task": "从起点起飞到10米高度，然后以5m/s速度向北飞行100米，再向东飞行50米，最后降落",
+    "expected_steps": ["takeoff(altitude=10)", "goto(100,0,10,speed=5)", "goto(100,50,10,speed=5)", "land"],
+    "difficulty": "easy",
+    "safety_constraints": ["max_altitude:50", "max_speed:10"]
+  },
+  {
+    "id": 6,
+    "task": "在A(10,10,5)和B(20,20,5)之间进行往返巡逻，每次在端点悬停10秒，共巡逻5次",
+    "expected_steps": ["takeoff", "patrol(points=[(10,10,5),(20,20,5)], hover_time=10, laps=5)", "land"],
+    "difficulty": "medium",
+    "safety_constraints": ["max_altitude:50", "max_speed:5"]
+  },
+  {
+    "id": 7,
+    "task": "先飞到A(10,0,5)，然后追踪一个移动目标（速度2m/s向东），保持距离5米，持续60秒",
+    "expected_steps": ["takeoff", "goto(10,0,5)", "track_target(speed=(2,0,0), distance=5, duration=60)", "land"],
+    "difficulty": "hard",
+    "safety_constraints": ["max_altitude:50", "max_speed:10", "min_distance_to_target:3"]
+  },
+  {
+    "id": 8,
+    "task": "起飞后爬升到20米，然后执行一个矩形航线（30x20米），每条边以4m/s飞行",
+    "expected_steps": ["takeoff(altitude=20)", "rectangle_path(size=(30,20), speed=4)", "land"],
+    "difficulty": "medium",
+    "safety_constraints": ["max_altitude:50", "max_speed:10"]
+  },
+  {
+    "id": 9,
+    "task": "在3个航点A(5,5,3)、B(15,5,3)、C(10,15,3)之间进行三角形巡航，每个航点拍照一次",
+    "expected_steps": ["takeoff", "goto(5,5,3)", "capture_image", "goto(15,5,3)", "capture_image", "goto(10,15,3)", "capture_image", "land"],
+    "difficulty": "medium",
+    "safety_constraints": ["max_altitude:50"]
+  },
+  {
+    "id": 10,
+    "task": "起飞到5米，然后以螺旋线方式爬升到15米（半径从2米增大到5米），最后降落",
+    "expected_steps": ["takeoff(altitude=5)", "spiral_climb(altitude=15, radius_start=2, radius_end=5)", "land"],
+    "difficulty": "hard",
+    "safety_constraints": ["max_altitude:50", "max_speed:3"]
+  },
+  {
+    "id": 11,
+    "task": "编队飞行：3架无人机从不同起点起飞，形成V字形编队，一起飞向目标点",
+    "expected_steps": ["formation_takeoff(count=3, pattern=V)", "formation_goto(target=(50,50,10))", "formation_land"],
+    "difficulty": "hard",
+    "safety_constraints": ["max_altitude:50", "formation_spacing:5", "collision_avoidance:enabled"]
+  },
+  {
+    "id": 12,
+    "task": "执行避障飞行：从A到B（距离50米），途中检测到障碍物后自动绕行",
+    "expected_steps": ["takeoff", "goto_with_avoidance(start=(0,0,5), end=(50,0,5), obstacle_detection=enabled)", "land"],
+    "difficulty": "hard",
+    "safety_constraints": ["max_altitude:50", "min_obstacle_distance:3"]
+  },
+  {
+    "id": 13,
+    "task": "精确着陆：从10米高度降落到一个1x1米的平台上，使用视觉定位",
+    "expected_steps": ["precision_land(target_size=(1,1), method=visual)", "land"],
+    "difficulty": "hard",
+    "safety_constraints": ["max_descent_speed:1", "precision_threshold:0.3"]
+  },
+  {
+    "id": 14,
+    "task": "续航管理：规划一条总距离不超过500米的航线，确保电量足够返回",
+    "expected_steps": ["plan_route(max_distance=500, return_battery=20)", "execute_route", "land"],
+    "difficulty": "medium",
+    "safety_constraints": ["max_distance:500", "min_return_battery:20"]
+  },
+  {
+    "id": 15,
+    "task": "跟随地面车辆：无人机在车辆上方10米处跟随，保持相机对准车辆",
+    "expected_steps": ["takeoff(altitude=10)", "follow_target(target=vehicle, altitude=10, camera=gimbal)", "land"],
+    "difficulty": "hard",
+    "safety_constraints": ["max_altitude:50", "min_altitude:5", "max_speed:15"]
+  },
+  {
+    "id": 16,
+    "task": "区域覆盖：对一个20x20米区域进行完全覆盖扫描，确保无遗漏",
+    "expected_steps": ["takeoff", "area_coverage(area=20x20, overlap=0.3, altitude=5)", "land"],
+    "difficulty": "medium",
+    "safety_constraints": ["max_altitude:50", "geofence:50"]
+  },
+  {
+    "id": 17,
+    "task": "紧急返航：在飞行过程中电量低于20%时自动返回起点",
+    "expected_steps": ["execute_mission", "check_battery(threshold=20)", "return_to_launch_if_low_battery", "land"],
+    "difficulty": "easy",
+    "safety_constraints": ["emergency_landing_battery:10", "return_battery:20"]
+  },
+  {
+    "id": 18,
+    "task": "多航点数据采集：在5个随机分布的点位各悬停5秒采集数据，然后返回",
+    "expected_steps": ["takeoff", "data_collection(points=random(5), hover_time=5)", "return_to_launch", "land"],
+    "difficulty": "medium",
+    "safety_constraints": ["max_altitude:50", "max_speed:5"]
+  },
+  {
+    "id": 19,
+    "task": "夜间飞行：使用LED灯进行夜间航拍任务，需要特殊的安全协议",
+    "expected_steps": ["enable_led", "takeoff", "night_mission(safety_protocol=enhanced)", "land", "disable_led"],
+    "difficulty": "hard",
+    "safety_constraints": ["max_altitude:30", "max_speed:3", "led_required:true", "return_home_on_signal_loss:true"]
+  },
+  {
+    "id": 20,
+    "task": "协同搜索：2架无人机分别搜索左右两个区域，共享发现的目标位置",
+    "expected_steps": ["assign_areas(count=2)", "parallel_search(share_detections=true)", "consolidate_results", "land_all"],
+    "difficulty": "hard",
+    "safety_constraints": ["max_altitude:50", "communication_required:true", "collision_avoidance:enabled"]
+  }
+]

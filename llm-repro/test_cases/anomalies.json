@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "scenario": "飞行过程中GPS信号丢失",
+    "context": "正在执行航点飞行任务，当前位置(20,30,10)，速度3m/s",
+    "expected_response": "切换到视觉定位或IMU推算，降低飞行高度，悬停等待GPS恢复或执行紧急降落",
+    "severity": "high",
+    "detection_keywords": ["GPS", "信号丢失", "定位失败"]
+  },
+  {
+    "id": 2,
+    "scenario": "电池电量突然从60%降到15%",
+    "context": "正在执行航拍任务，距离起飞点80米",
+    "expected_response": "立即中断当前任务，计算最短返航路径，以最大安全速度返回，准备紧急降落",
+    "severity": "critical",
+    "detection_keywords": ["电量", "电池", "低电量"]
+  },
+  {
+    "id": 3,
+    "scenario": "检测到前方有未知障碍物",
+    "context": "正在以4m/s速度飞向目标点，距离障碍物10米",
+    "expected_response": "立即减速或悬停，评估障碍物位置和大小，规划绕行路径",
+    "severity": "high",
+    "detection_keywords": ["障碍物", "碰撞风险", "避障"]
+  },
+  {
+    "id": 4,
+    "scenario": "通信链路质量下降，丢包率达到30%",
+    "context": "正在执行远程巡检任务，距离地面站500米",
+    "expected_response": "降低飞行速度，缩短与地面站距离，切换到更可靠的通信模式，准备自主返航",
+    "severity": "medium",
+    "detection_keywords": ["通信", "丢包", "链路质量"]
+  },
+  {
+    "id": 5,
+    "scenario": "风速突然增大到8级（17-20m/s）",
+    "context": "正在5米高度执行低空巡检",
+    "expected_response": "立即降低飞行高度，增加姿态控制增益，寻找就近安全降落点，或执行紧急降落",
+    "severity": "high",
+    "detection_keywords": ["风速", "大风", "阵风"]
+  },
+  {
+    "id": 6,
+    "scenario": "IMU传感器数据异常，角速率读数跳变",
+    "context": "正在执行精确悬停任务",
+    "expected_response": "切换到冗余传感器（如果有），降低控制带宽，执行安全降落",
+    "severity": "critical",
+    "detection_keywords": ["IMU", "传感器", "异常", "跳变"]
+  },
+  {
+    "id": 7,
+    "scenario": "电机温度过高报警",
+    "context": "连续飞行15分钟后，电机温度达到85°C",
+    "expected_response": "降低飞行强度（减少大机动），寻找就近降落点，让电机冷却",
+    "severity": "medium",
+    "detection_keywords": ["温度", "电机", "过热"]
+  },
+  {
+    "id": 8,
+    "scenario": "检测到禁飞区边界",
+    "context": "正在向目标点飞行，即将进入机场禁飞区",
+    "expected_response": "立即停止前进，重新规划绕行路径，避开禁飞区",
+    "severity": "high",
+    "detection_keywords": ["禁飞区", "地理围栏", "边界"]
+  },
+  {
+    "id": 9,
+    "scenario": "任务执行时间超出预期50%",
+    "context": "原计划20分钟完成的巡检已飞行30分钟",
+    "expected_response": "评估剩余电量是否足够完成任务和返航，如果不足则优先返航",
+    "severity": "medium",
+    "detection_keywords": ["超时", "时间", "电量评估"]
+  },
+  {
+    "id": 10,
+    "scenario": "相机云台卡死，无法调整拍摄角度",
+    "context": "正在执行航拍任务，需要拍摄不同角度的照片",
+    "expected_response": "调整飞行姿态补偿云台角度（如果安全），或跳过该拍摄点，继续其他任务",
+    "severity": "low",
+    "detection_keywords": ["云台", "相机", "卡死"]
+  }
+]
